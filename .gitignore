@@ -1,0 +1,9 @@
+/config.json
+/config.*.json
+!/config.example.json
+*.private.json
+/.env
+/.env.*
+/dist/
+/xiayu-proxy-subscriptions
+/xiayu-proxy-subscriptions.exe

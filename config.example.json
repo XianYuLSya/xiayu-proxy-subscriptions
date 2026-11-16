@@ -1,0 +1,25 @@
+{
+  "token": "GENERATED_BY_INIT",
+  "nodes": [
+    {
+      "id": "windows",
+      "uuid": "136cf889-a65c-4ffe-8532-d0e6f1e3c13c",
+      "name": "Windows",
+      "server": "proxy.example.invalid",
+      "port": 20001,
+      "method": "2022-blake3-aes-128-gcm",
+      "password": "REPLACE_WITH_BASE64_KEY",
+      "udp": true
+    },
+    {
+      "id": "android",
+      "uuid": "3268baf4-3777-487c-9e20-7b98e8d907e0",
+      "name": "Android",
+      "server": "proxy.example.invalid",
+      "port": 20002,
+      "method": "2022-blake3-aes-128-gcm",
+      "password": "REPLACE_WITH_BASE64_KEY",
+      "udp": true
+    }
+  ]
+}
