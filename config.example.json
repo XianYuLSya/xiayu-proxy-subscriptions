@@ -20,6 +20,16 @@
       "method": "2022-blake3-aes-128-gcm",
       "password": "REPLACE_WITH_BASE64_KEY",
       "udp": true
+    },
+    {
+      "id": "linux",
+      "uuid": "e39b8415-b904-4680-a0c0-f679daba8ef6",
+      "name": "Linux",
+      "server": "proxy.example.invalid",
+      "port": 20003,
+      "method": "2022-blake3-aes-128-gcm",
+      "password": "REPLACE_WITH_BASE64_KEY",
+      "udp": true
     }
   ]
 }

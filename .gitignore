@@ -2,6 +2,7 @@
 /config.*.json
 !/config.example.json
 *.private.json
+*.server.json
 /.env
 /.env.*
 /dist/

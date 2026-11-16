@@ -38,11 +38,12 @@ func TestSubscriptionSelection(t *testing.T) {
 		cases := []struct {
 			id        string
 			wantNames []string
-			omitted   string
+			omitted   []string
 		}{
-			{"windows", []string{"Windows"}, "Android"},
-			{"android", []string{"Android"}, "Windows"},
-			{"all", []string{"Windows", "Android"}, ""},
+			{"windows", []string{"Windows"}, []string{"Android", "Linux"}},
+			{"android", []string{"Android"}, []string{"Windows", "Linux"}},
+			{"linux", []string{"Linux"}, []string{"Windows", "Android"}},
+			{"all", []string{"Windows", "Android", "Linux"}, nil},
 		}
 		for _, test := range cases {
 			w := httptest.NewRecorder()
@@ -56,8 +57,10 @@ func TestSubscriptionSelection(t *testing.T) {
 					t.Fatalf("%s: missing usable node %s", test.id, name)
 				}
 			}
-			if test.omitted != "" && strings.Contains(body, test.omitted) {
-				t.Fatalf("%s: unexpectedly includes %s", test.id, test.omitted)
+			for _, other := range test.omitted {
+				if strings.Contains(body, other) {
+					t.Fatalf("%s: unexpectedly includes %s", test.id, other)
+				}
 			}
 			if !strings.Contains(body, `"MATCH,XiaYu Route"`) || strings.Contains(body, "DIRECT") {
 				t.Fatalf("%s: expected proxy-only rule", test.id)
@@ -136,8 +139,17 @@ func TestPrivateConfigInitialization(t *testing.T) {
 		t.Fatal(err)
 	}
 	token, err := base64.RawURLEncoding.DecodeString(cfg.Token)
-	if err != nil || len(token) != 32 || len(cfg.Nodes) != 2 || cfg.Nodes[0].UUID == cfg.Nodes[1].UUID {
+	ids := make(map[string]bool)
+	for _, entry := range cfg.Nodes {
+		ids[entry.UUID] = uuidPattern.MatchString(entry.UUID)
+	}
+	if err != nil || len(token) != 32 || len(cfg.Nodes) != 3 || len(ids) != 3 {
 		t.Fatal("invalid token or node IDs in new configuration")
+	}
+	for _, valid := range ids {
+		if !valid {
+			t.Fatal("invalid UUID in new configuration")
+		}
 	}
 	if err := initializeConfig(path); err == nil {
 		t.Fatal("initializing an existing configuration must fail")

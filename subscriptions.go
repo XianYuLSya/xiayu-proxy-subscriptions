@@ -27,17 +27,12 @@ func subscriptionHandler(cfg config) http.Handler {
 		}
 		selected := cfg.Nodes
 		if id := r.PathValue("id"); id != "all" {
-			selected = nil
-			for _, entry := range cfg.Nodes {
-				if entry.ID == id {
-					selected = []node{entry}
-					break
-				}
+			entry, ok := cfg.nodeByID(id)
+			if !ok {
+				http.NotFound(w, r)
+				return
 			}
-		}
-		if len(selected) == 0 {
-			http.NotFound(w, r)
-			return
+			selected = []node{entry}
 		}
 		switch r.PathValue("format") {
 		case "mihomo.yaml":

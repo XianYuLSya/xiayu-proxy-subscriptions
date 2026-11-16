@@ -117,6 +117,15 @@ func validServer(server string) bool {
 	return len(server) <= 253 && hostPattern.MatchString(server)
 }
 
+func (cfg config) nodeByID(id string) (node, bool) {
+	for _, entry := range cfg.Nodes {
+		if entry.ID == id {
+			return entry, true
+		}
+	}
+	return node{}, false
+}
+
 func initializeConfig(path string) error {
 	var cfg config
 	if err := json.Unmarshal(exampleConfig, &cfg); err != nil {
@@ -134,7 +143,11 @@ func initializeConfig(path string) error {
 		}
 		cfg.Nodes[i].UUID = id
 	}
-	contents, err := json.MarshalIndent(cfg, "", "  ")
+	return writePrivateJSON(path, cfg)
+}
+
+func writePrivateJSON(path string, value any) error {
+	contents, err := json.MarshalIndent(value, "", "  ")
 	if err != nil {
 		return err
 	}
